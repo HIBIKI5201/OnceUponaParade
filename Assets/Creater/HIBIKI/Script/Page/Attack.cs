@@ -3,6 +3,9 @@ using UnityEngine;
 public class Attack : PageBase
 {
     [SerializeField]
+    AttackSystem.AttackType _attackType;
+
+    [SerializeField]
     float _damage;
 
     private void Start()
@@ -12,6 +15,13 @@ public class Attack : PageBase
 
     public override void PageActivation()
     {
-        Debug.Log("UŒ‚ƒƒO");
+        if (AttackSystem.Attack(_attackType, _damage))
+        {
+            Debug.Log("UŒ‚¬Œ÷");
+        }
+        else
+        {
+            Debug.Log("UŒ‚‘ÎÛ‚ªŒ©‚Â‚©‚ç‚È‚©‚Á‚½");
+        }
     }
 }

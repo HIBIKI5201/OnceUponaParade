@@ -1,15 +1,19 @@
 using System.Collections;
+using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
 public abstract class PageBase : MonoBehaviour
 {
     Canvas canvas;
-    RectTransform canvasTransform;
-    RectTransform rectTransform;
+    RectTransform canvasTransform = default;
+    RectTransform rectTransform = default;
+
+    [SerializeField]
+    TextMeshProUGUI flavorTextBox;
 
     [HideInInspector]
-    public PageKind _pageKind;
+    public PageKind _pageKind = default;
     public enum PageKind
     {
         Attack,
@@ -19,36 +23,43 @@ public abstract class PageBase : MonoBehaviour
     }
 
     [SerializeField]
-    float _cost;
+    float _cost = default;
 
-    Vector2 _setPos;
+    [SerializeField]
+    string _flavorText;
+
+    Vector2 _setPos = default;
     bool _clickActive = false;
 
     private void Awake()
     {
+        //位置を取得する
         canvas = GetComponentInParent<Canvas>();
         canvasTransform = canvas.GetComponent<RectTransform>();
         rectTransform = GetComponent<RectTransform>();
 
+        //EventTriggerをアタッチ
         EventTrigger eventTrigger = gameObject.AddComponent<EventTrigger>();
-        EventTrigger.Entry pointerDownEntry = new EventTrigger.Entry
+        EventTrigger.Entry pointerDownEntry = new()
         {
             eventID = EventTriggerType.PointerDown
         };
-        EventTrigger.Entry pointerUpEntry = new EventTrigger.Entry
+        EventTrigger.Entry pointerUpEntry = new()
         {
             eventID = EventTriggerType.PointerUp
         };
 
-        pointerDownEntry.callback.AddListener((data) => OnClickDown((PointerEventData)data));
-        pointerUpEntry.callback.AddListener((data) => OnClickUp((PointerEventData)data));
+        pointerDownEntry.callback.AddListener((data) => OnClickDown());
+        pointerUpEntry.callback.AddListener((data) => OnClickUp());
         eventTrigger.triggers.Add(pointerDownEntry);
         eventTrigger.triggers.Add(pointerUpEntry);
     }
 
+    //ページの効果が発動する
     public abstract void PageActivation();
 
-    public void OnClickDown(PointerEventData eventData)
+    //このページが保持された時
+    public void OnClickDown()
     {
         _setPos = rectTransform.anchoredPosition;
 
@@ -56,16 +67,19 @@ public abstract class PageBase : MonoBehaviour
         StartCoroutine(SelectingSelf());
     }
 
-    public void OnClickUp(PointerEventData eventData)
+    //ページの保持が解除された時
+    public void OnClickUp()
     {
         _clickActive = false;
         StopCoroutine(SelectingSelf());
         PageActivation();
 
         rectTransform.anchoredPosition = _setPos;
+
+        flavorTextBox.text = _flavorText;
     }
 
-
+    //保持されている間は
     IEnumerator SelectingSelf()
     {
         while (_clickActive)
@@ -80,6 +94,5 @@ public abstract class PageBase : MonoBehaviour
 
             yield return new WaitForEndOfFrame();
         }
-
     }
 }
