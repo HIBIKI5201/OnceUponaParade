@@ -15,20 +15,13 @@ public class Attack : PageBase
 
     public override void PageActivation()
     {
-
-        switch (_attackType)
+        if (AttackSystem.Attack(_attackType, _damage))
         {
-            case AttackSystem.AttackType.Single:
-                AttackSystem.SingleAttack();
-                break;
-
-            case AttackSystem.AttackType.Area:
-                AttackSystem.AreaAttack();
-                break;
-
-            case AttackSystem.AttackType.All:
-                AttackSystem.AllAttack();
-                break;
+            Debug.Log("UŒ‚¬Œ÷");
+        }
+        else
+        {
+            Debug.Log("UŒ‚‘ÎÛ‚ªŒ©‚Â‚©‚ç‚È‚©‚Á‚½");
         }
     }
 }

@@ -500,7 +500,7 @@ PrefabInstance:
       objectReference: {fileID: 21300000, guid: ccc0d0a54f8d5824683ccbffd7308590, type: 3}
     - target: {fileID: 4118796511950148311, guid: 16caa24c2b3841c48a977ec7d1adcab5, type: 3}
       propertyPath: _attackType
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4118796511950148311, guid: 16caa24c2b3841c48a977ec7d1adcab5, type: 3}
       propertyPath: _flavorText
@@ -757,13 +757,17 @@ PrefabInstance:
       propertyPath: flavorTextBox
       value: 
       objectReference: {fileID: 1444070382}
+    - target: {fileID: 415144156331425624, guid: 550e98e11d3fca043a350646728799d0, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: ccc0d0a54f8d5824683ccbffd7308590, type: 3}
     - target: {fileID: 5846537000664727475, guid: 550e98e11d3fca043a350646728799d0, type: 3}
       propertyPath: m_Name
       value: AkazukinSummon
       objectReference: {fileID: 0}
     - target: {fileID: 5846537000664727475, guid: 550e98e11d3fca043a350646728799d0, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7770196736269171988, guid: 550e98e11d3fca043a350646728799d0, type: 3}
       propertyPath: m_Pivot.x
@@ -791,11 +795,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7770196736269171988, guid: 550e98e11d3fca043a350646728799d0, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 100
+      value: 300
       objectReference: {fileID: 0}
     - target: {fileID: 7770196736269171988, guid: 550e98e11d3fca043a350646728799d0, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 250
+      value: 420
       objectReference: {fileID: 0}
     - target: {fileID: 7770196736269171988, guid: 550e98e11d3fca043a350646728799d0, type: 3}
       propertyPath: m_LocalPosition.x
@@ -827,11 +831,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7770196736269171988, guid: 550e98e11d3fca043a350646728799d0, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -156
+      value: -351
       objectReference: {fileID: 0}
     - target: {fileID: 7770196736269171988, guid: 550e98e11d3fca043a350646728799d0, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -386
+      value: -269
       objectReference: {fileID: 0}
     - target: {fileID: 7770196736269171988, guid: 550e98e11d3fca043a350646728799d0, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
