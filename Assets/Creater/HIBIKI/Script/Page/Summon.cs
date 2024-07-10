@@ -8,7 +8,17 @@ public class Summon : PageBase
     [SerializeField]
     float _health;
     [SerializeField]
+    float _defense;
+    [SerializeField]
     float _attack;
+
+    [SerializeField]
+    float _distance;
+
+    [SerializeField]
+    float _attackSpeed;
+    [SerializeField]
+    float _moveSpeed;
 
     private void Start()
     {
@@ -18,5 +28,8 @@ public class Summon : PageBase
     public override void PageActivation()
     {
         Debug.Log("è¢ä´ÉçÉO");
+
+        Instantiate(character, Vector2.zero, Quaternion.identity);
+
     }
 }
