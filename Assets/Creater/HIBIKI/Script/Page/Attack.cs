@@ -1,18 +1,12 @@
 using UnityEngine;
-using UnityEngine.Rendering;
 
 public class Attack : PageBase
 {
     [SerializeField]
-    float _damage;
+    AttackSystem.AttackType _attackType;
 
-    public AttackType _attackType;
-    public enum AttackType
-    {
-        One,
-        Field,
-        All
-    }
+    [SerializeField]
+    float _damage;
 
     private void Start()
     {
@@ -21,6 +15,20 @@ public class Attack : PageBase
 
     public override void PageActivation()
     {
-        Debug.Log("çUåÇÉçÉO");
+
+        switch (_attackType)
+        {
+            case AttackSystem.AttackType.Single:
+                AttackSystem.SingleAttack();
+                break;
+
+            case AttackSystem.AttackType.Area:
+                AttackSystem.AreaAttack();
+                break;
+
+            case AttackSystem.AttackType.All:
+                AttackSystem.AllAttack();
+                break;
+        }
     }
 }
