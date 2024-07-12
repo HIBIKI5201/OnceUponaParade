@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class AttackSystem : MonoBehaviour
@@ -10,14 +12,29 @@ public class AttackSystem : MonoBehaviour
         All
     }
 
-    public static bool Attack(AttackType attackType, float damage)
+    public enum TargetTag
+    {
+        Friend,
+        Enemy,
+    }
+
+    static readonly Dictionary<TargetTag, string> _targetTag = new()
+    {
+        {TargetTag.Friend, "Friend"},
+        {TargetTag.Enemy, "Enemy"}
+    };
+
+
+
+    public static List<CharacterBase> Attack(AttackType attackType, TargetTag targetTag)
     {
         List<GameObject> hitGameObjects = new();
+        List< CharacterBase > hitCharacter = new();
 
         switch (attackType)
         {
             case AttackType.Single:
-                hitGameObjects.Add(SingleAttack());
+                SingleAttack(ref hitGameObjects);
                 break;
 
             case AttackType.Area:
@@ -30,39 +47,47 @@ public class AttackSystem : MonoBehaviour
         }
 
 
+            
+        
+
         if (hitGameObjects != null)
         {
-            foreach (GameObject obj in hitGameObjects)
-            {
-                Debug.Log($"{obj.name}に{damage}ダメージ与えた");
-            }
+            hitGameObjects = hitGameObjects.Where(go => go.CompareTag(_targetTag[targetTag])).ToList();
 
-            return true;
+            if (hitGameObjects.Count > 0)
+            {
+                foreach (GameObject obj in hitGameObjects)
+                {
+                    if (obj.TryGetComponent<CharacterBase>(out CharacterBase characterBase))
+                    {
+                        hitCharacter.Add(characterBase);
+                        Debug.Log($"{obj.name}に当たった");
+                    }
+                }
+
+                return hitCharacter;
+            }
         }
-        else
-        {
-            return false;
-        }
+
+        return null;
+       
     }
 
-    static GameObject SingleAttack()
+    static void SingleAttack(ref List<GameObject> hitGameObject)
     {
+        if (Physics.Raycast(Vector3.zero, Vector3.forward, out RaycastHit hitInfo))
+        {
+            hitGameObject.Add(hitInfo.collider.gameObject);
+        }
         Debug.Log("単体攻撃ログ");
-        GameObject newGameObject = new("testObj");
-
-        GameObject hitGameObject = newGameObject;
-        return hitGameObject;
     }
 
     static List<GameObject> AreaAttack()
     {
         Debug.Log("範囲攻撃ログ");
-        List<GameObject> hitGameObjects = new()
-        {
-            new("testObj1"),
-            new("testObj2"),
-            new("testObj3")
-        };
+        List<GameObject> hitGameObjects = Physics.RaycastAll(Vector3.zero, Vector3.forward)
+            .Select(hit => hit.collider.gameObject)
+            .ToList();
 
         return hitGameObjects;
     }
@@ -70,8 +95,9 @@ public class AttackSystem : MonoBehaviour
     static List<GameObject> AllAttack()
     {
         Debug.Log("全体攻撃ログ");
-        //正式にはnew()にすること
-        List<GameObject> hitGameObjects = null;
+        List<GameObject> hitGameObjects = Physics.RaycastAll(Vector3.zero, Vector3.forward)
+            .Select(hit => hit.collider.gameObject)
+            .ToList();
 
         return hitGameObjects;
     }

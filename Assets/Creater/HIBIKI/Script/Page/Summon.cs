@@ -25,11 +25,13 @@ public class Summon : PageBase
         _pageKind = PageKind.Summon;
     }
 
-    public override void PageActivation()
+    public override bool PageActivation()
     {
         Debug.Log("¢Š«ƒƒO");
 
-        Instantiate(character, Vector2.zero, Quaternion.identity);
-
+        //‰¼‚Ì¢Š«ˆÊ’u
+        GameObject go = Instantiate(character, transform.position, Quaternion.identity);
+        go.GetComponent<CharacterBase>().Spawn(_health, _defense, _attack, _distance, _attackSpeed, _moveSpeed);
+        return true;
     }
 }
