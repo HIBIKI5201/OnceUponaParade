@@ -15,7 +15,7 @@ public class Attack : PageBase
         _pageKind = PageKind.Attack;
     }
 
-    public override bool PageActivation()
+    public override bool PageActivation(Vector3 Pos)
     {
         List<CharacterBase> hitCharacter = AttackSystem.Attack(_attackType, TargetTag.Enemy);
         if (hitCharacter != null )

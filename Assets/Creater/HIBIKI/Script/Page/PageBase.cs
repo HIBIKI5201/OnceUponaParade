@@ -60,7 +60,7 @@ public abstract class PageBase : MonoBehaviour
     }
 
     //ページの効果が発動する
-    public abstract bool PageActivation();
+    public abstract bool PageActivation(Vector3 Pos);
 
     //このページが保持された時
     public void OnClickDown()
@@ -77,8 +77,11 @@ public abstract class PageBase : MonoBehaviour
     public void OnClickUp()
     {
         _clickActive = false;
+
+        Vector3 activePos = ActivePosition();
+
         StopCoroutine(SelectingSelf());
-        if (PageActivation())
+        if (PageActivation(activePos))
         {
             Debug.Log("発動成功");
         }
@@ -107,5 +110,13 @@ public abstract class PageBase : MonoBehaviour
 
             yield return new WaitForEndOfFrame();
         }
+
+    }
+    Vector3 ActivePosition()
+    {
+        Vector3 cameraPos = Camera.main.transform.position;
+        Vector3 direction = (transform.position - cameraPos).normalized;
+
+        return direction;
     }
 }
