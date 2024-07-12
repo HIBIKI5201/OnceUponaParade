@@ -22,14 +22,18 @@ public abstract class PageBase : MonoBehaviour
         Debilitate,
     }
 
-    [SerializeField]
+    [SerializeField, Tooltip("コストの入力欄")]
     float _cost = default;
 
-    [SerializeField]
+    [SerializeField, Tooltip("フレーバーテキスト欄")]
     string _flavorText;
 
+    [Tooltip("カードが置いてあった場所")]
     Vector2 _setPos = default;
     bool _clickActive = false;
+
+    [Tooltip("カードが発動された場所")]
+    public Vector2 activePos;
 
     private void Awake()
     {
@@ -56,7 +60,7 @@ public abstract class PageBase : MonoBehaviour
     }
 
     //ページの効果が発動する
-    public abstract void PageActivation();
+    public abstract bool PageActivation(Vector3 Pos);
 
     //このページが保持された時
     public void OnClickDown()
@@ -65,18 +69,30 @@ public abstract class PageBase : MonoBehaviour
 
         _clickActive = true;
         StartCoroutine(SelectingSelf());
+
+        flavorTextBox.text = _flavorText;
     }
 
     //ページの保持が解除された時
     public void OnClickUp()
     {
         _clickActive = false;
+
+        Vector3 activePos = ActivePosition();
+
         StopCoroutine(SelectingSelf());
-        PageActivation();
+        if (PageActivation(activePos))
+        {
+            Debug.Log("発動成功");
+        }
+        else
+        {
+            Debug.Log("発動失敗");
+        }
 
         rectTransform.anchoredPosition = _setPos;
 
-        flavorTextBox.text = _flavorText;
+        flavorTextBox.text = "";
     }
 
     //保持されている間は
@@ -94,5 +110,13 @@ public abstract class PageBase : MonoBehaviour
 
             yield return new WaitForEndOfFrame();
         }
+
+    }
+    Vector3 ActivePosition()
+    {
+        Vector3 cameraPos = Camera.main.transform.position;
+        Vector3 direction = (transform.position - cameraPos).normalized;
+
+        return direction;
     }
 }

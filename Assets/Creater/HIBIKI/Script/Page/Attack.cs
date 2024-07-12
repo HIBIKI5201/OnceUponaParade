@@ -1,9 +1,11 @@
+using System.Collections.Generic;
 using UnityEngine;
+using static AttackSystem;
 
 public class Attack : PageBase
 {
     [SerializeField]
-    AttackSystem.AttackType _attackType;
+    AttackType _attackType;
 
     [SerializeField]
     float _damage;
@@ -13,15 +15,21 @@ public class Attack : PageBase
         _pageKind = PageKind.Attack;
     }
 
-    public override void PageActivation()
+    public override bool PageActivation(Vector3 Pos)
     {
-        if (AttackSystem.Attack(_attackType, _damage))
+        List<CharacterBase> hitCharacter = AttackSystem.Attack(_attackType, TargetTag.Enemy);
+        if (hitCharacter != null )
         {
-            Debug.Log("UŒ‚¬Œ÷");
+            foreach (CharacterBase Character in hitCharacter)
+            {
+                Character.HitDamage(_damage);
+            }
+
+            return true;
         }
         else
         {
-            Debug.Log("UŒ‚‘ÎÛ‚ªŒ©‚Â‚©‚ç‚È‚©‚Á‚½");
+            return false;
         }
     }
 }
