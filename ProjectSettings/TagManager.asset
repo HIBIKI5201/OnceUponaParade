@@ -15,7 +15,7 @@ TagManager:
   - Water
   - UI
   - Ground
-  - 
+  - test
   - 
   - 
   - 
@@ -43,4 +43,10 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Akazukin
+    uniqueID: 1958471235
+    locked: 0
+  - name: UI
+    uniqueID: 3612782501
     locked: 0

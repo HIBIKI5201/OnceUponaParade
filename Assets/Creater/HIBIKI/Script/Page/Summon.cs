@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class Summon : PageBase
 {
+    [Header("ステータス情報")]
     [SerializeField]
     GameObject character;
 
@@ -25,17 +26,14 @@ public class Summon : PageBase
         _pageKind = PageKind.Summon;
     }
 
-    public override bool PageActivation(Vector3 Pos)
+    public override bool PageActivation(Vector3 activePoint)
     {
         Debug.Log("召喚ログ");
 
-        Debug.Log(Pos);
-        Physics.Raycast(transform.position, Pos, out RaycastHit activePos, Mathf.Infinity, LayerMask.GetMask("Ground"));
-
-        Debug.Log(activePos.point);
+        Debug.Log(activePoint);
 
         //仮の召喚位置
-        GameObject go = Instantiate(character, activePos.point, Quaternion.identity);
+        GameObject go = Instantiate(character, activePoint, Quaternion.identity);
         go.GetComponent<CharacterBase>().Spawn(_health, _defense, _attack, _distance, _attackSpeed, _moveSpeed);
         return true;
     }

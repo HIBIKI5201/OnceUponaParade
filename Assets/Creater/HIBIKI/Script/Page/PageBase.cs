@@ -3,11 +3,15 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public abstract class PageBase : MonoBehaviour
+public abstract class PageBase : MonoBehaviour, IPageInterface
 {
     Canvas canvas;
     RectTransform canvasTransform = default;
     RectTransform rectTransform = default;
+
+    [Header("カード情報")]
+
+    Vector2 _movePosOffset;
 
     [SerializeField]
     TextMeshProUGUI flavorTextBox;
@@ -22,6 +26,8 @@ public abstract class PageBase : MonoBehaviour
         Debilitate,
     }
 
+    static float _costCounter;
+
     [SerializeField, Tooltip("コストの入力欄")]
     float _cost = default;
 
@@ -32,7 +38,7 @@ public abstract class PageBase : MonoBehaviour
     Vector2 _setPos = default;
     bool _clickActive = false;
 
-    [Tooltip("カードが発動された場所")]
+    [HideInInspector, Tooltip("カードが発動された場所")]
     public Vector2 activePos;
 
     private void Awake()
@@ -60,7 +66,7 @@ public abstract class PageBase : MonoBehaviour
     }
 
     //ページの効果が発動する
-    public abstract bool PageActivation(Vector3 Pos);
+    public abstract bool PageActivation(Vector3 activePoint);
 
     //このページが保持された時
     public void OnClickDown()
@@ -70,6 +76,8 @@ public abstract class PageBase : MonoBehaviour
         _clickActive = true;
         StartCoroutine(SelectingSelf());
 
+        rectTransform.sizeDelta = new Vector2(rectTransform.sizeDelta.x / 3, rectTransform.sizeDelta.y / 3);
+
         flavorTextBox.text = _flavorText;
     }
 
@@ -77,20 +85,22 @@ public abstract class PageBase : MonoBehaviour
     public void OnClickUp()
     {
         _clickActive = false;
-
-        Vector3 activePos = ActivePosition();
-
         StopCoroutine(SelectingSelf());
-        if (PageActivation(activePos))
+
+        if (PageActivation(ActivePosition()))
         {
             Debug.Log("発動成功");
+
+            _costCounter -= _cost;
+            Destroy(gameObject);
         }
         else
         {
             Debug.Log("発動失敗");
-        }
 
-        rectTransform.anchoredPosition = _setPos;
+            rectTransform.anchoredPosition = _setPos;
+            rectTransform.sizeDelta = new Vector2(rectTransform.sizeDelta.x * 3, rectTransform.sizeDelta.y * 3);
+        }
 
         flavorTextBox.text = "";
     }
@@ -102,7 +112,7 @@ public abstract class PageBase : MonoBehaviour
         {
             RectTransformUtility.ScreenPointToLocalPointInRectangle(
             canvasTransform,
-            Input.mousePosition,
+            Input.mousePosition + (Vector3)_movePosOffset,
             canvas.worldCamera,
             out var mousePosition);
 
@@ -114,9 +124,19 @@ public abstract class PageBase : MonoBehaviour
     }
     Vector3 ActivePosition()
     {
-        Vector3 cameraPos = Camera.main.transform.position;
-        Vector3 direction = (transform.position - cameraPos).normalized;
+        //マウスの場所
+        RectTransformUtility.ScreenPointToWorldPointInRectangle(canvasTransform, Input.mousePosition, canvas.worldCamera, out Vector3 mousePosition);
 
-        return direction;
+        Vector3 direction = (mousePosition - Camera.main.transform.position).normalized;
+
+        Physics.Raycast(mousePosition, direction, out RaycastHit activePos, Mathf.Infinity, LayerMask.GetMask("Ground"));
+
+
+        return activePos.point;
+    }
+
+    void IPageInterface.SetPagePropaty(Vector2 movePosOffset)
+    {
+        _movePosOffset = movePosOffset;
     }
 }
