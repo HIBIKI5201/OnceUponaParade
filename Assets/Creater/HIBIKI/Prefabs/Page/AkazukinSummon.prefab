@@ -88,8 +88,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 20d148c6d8b6599449e01998a4bb7cc4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  flavorTextBox: {fileID: 0}
   _pageKind: 0
   _cost: 300
-  character: {fileID: 0}
+  _flavorText: 
+  activePos: {x: 0, y: 0}
+  character: {fileID: 7885614926912498696, guid: d9de667796e74834982de2d504a70d6c, type: 3}
   _health: 500
+  _defense: 0
   _attack: 25
+  _distance: 0
+  _attackSpeed: 0
+  _moveSpeed: 0

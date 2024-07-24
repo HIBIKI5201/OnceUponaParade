@@ -44,7 +44,7 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
-  - name: Akazukin
+  - name: Character
     uniqueID: 1958471235
     locked: 0
   - name: UI

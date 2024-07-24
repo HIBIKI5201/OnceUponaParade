@@ -33,7 +33,7 @@ public class Summon : PageBase
         Debug.Log(activePoint);
 
         //âºÇÃè¢ä´à íu
-        GameObject go = Instantiate(character, activePoint, Quaternion.identity);
+        GameObject go = Instantiate(character, activePoint, character.transform.rotation);
         go.GetComponent<CharacterBase>().Spawn(_health, _defense, _attack, _distance, _attackSpeed, _moveSpeed);
         return true;
     }
