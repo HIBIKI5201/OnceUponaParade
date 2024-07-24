@@ -4,20 +4,23 @@ using static AttackSystem;
 
 public class Attack : PageBase
 {
+    [Header("ステータス情報")]
     [SerializeField]
     AttackType _attackType;
 
     [SerializeField]
-    float _damage;
+    float _damage = 0;
+    [SerializeField]
+    float _range = 1;
 
     private void Start()
     {
         _pageKind = PageKind.Attack;
     }
 
-    public override bool PageActivation(Vector3 Pos)
+    public override bool PageActivation(Vector3 activePoint)
     {
-        List<CharacterBase> hitCharacter = AttackSystem.Attack(_attackType, TargetTag.Enemy);
+        List<CharacterBase> hitCharacter = AttackSystem.Attack(_attackType, TargetTag.Enemy, activePoint, _range);
         if (hitCharacter != null )
         {
             foreach (CharacterBase Character in hitCharacter)

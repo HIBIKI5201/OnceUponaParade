@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Linq;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class AttackSystem : MonoBehaviour
@@ -26,79 +25,28 @@ public class AttackSystem : MonoBehaviour
 
 
 
-    public static List<CharacterBase> Attack(AttackType attackType, TargetTag targetTag)
+    public static List<CharacterBase> Attack(AttackType attackType, TargetTag targetTag, Vector3 activePoint, float range)
     {
-        List<GameObject> hitGameObjects = new();
-        List< CharacterBase > hitCharacter = new();
+        List<CharacterBase> hitCharacter = Physics.OverlapSphere(activePoint, range)
+            .Where(collider => collider.CompareTag(_targetTag[targetTag]) && collider.TryGetComponent<CharacterBase>(out _))
+            .Select(collider => collider.GetComponent<CharacterBase>())
+            .ToList();
 
-        switch (attackType)
+
+        if (hitCharacter.Count > 0)
         {
-            case AttackType.Single:
-                SingleAttack(ref hitGameObjects);
-                break;
-
-            case AttackType.Area:
-                hitGameObjects = AreaAttack();
-                break;
-
-            case AttackType.All:
-                hitGameObjects = AllAttack();
-                break;
-        }
-
-
-            
-        
-
-        if (hitGameObjects != null)
-        {
-            hitGameObjects = hitGameObjects.Where(go => go.CompareTag(_targetTag[targetTag])).ToList();
-
-            if (hitGameObjects.Count > 0)
+            switch (attackType)
             {
-                foreach (GameObject obj in hitGameObjects)
-                {
-                    if (obj.TryGetComponent<CharacterBase>(out CharacterBase characterBase))
-                    {
-                        hitCharacter.Add(characterBase);
-                        Debug.Log($"{obj.name}Ç…ìñÇΩÇ¡ÇΩ");
-                    }
-                }
+                case AttackType.Single:
+                    return hitCharacter = hitCharacter.Take((1)).ToList();
 
-                return hitCharacter;
+                case AttackType.Area:
+                case AttackType.All:
+                    return hitCharacter;
+
             }
         }
-
         return null;
-       
-    }
 
-    static void SingleAttack(ref List<GameObject> hitGameObject)
-    {
-        if (Physics.Raycast(Vector3.zero, Vector3.forward, out RaycastHit hitInfo))
-        {
-            hitGameObject.Add(hitInfo.collider.gameObject);
-        }
-        Debug.Log("íPëÃçUåÇÉçÉO");
-    }
-
-    static List<GameObject> AreaAttack()
-    {
-        Debug.Log("îÕàÕçUåÇÉçÉO");
-        List<GameObject> hitGameObjects = Physics.RaycastAll(Vector3.zero, Vector3.forward)
-            .Select(hit => hit.collider.gameObject)
-            .ToList();
-
-        return hitGameObjects;
-    }
-
-    static List<GameObject> AllAttack()
-    {
-        Debug.Log("ëSëÃçUåÇÉçÉO");
-        List<GameObject> hitGameObjects = Physics.RaycastAll(Vector3.zero, Vector3.forward)
-            .Select(hit => hit.collider.gameObject)
-            .ToList();
-
-        return hitGameObjects;
     }
 }

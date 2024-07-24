@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class CharacterBase : MonoBehaviour
@@ -29,8 +27,11 @@ public class CharacterBase : MonoBehaviour
 
     public void HitDamage(float damage)
     {
-        _currentHealth -= Mathf.Min(damage - _defense, 0);
-
+        _currentHealth -= Mathf.Max(damage - _defense, 0);
         Debug.Log(_currentHealth);
+        if (_currentHealth < 0 )
+        {
+            Destroy(gameObject);
+        }
     }
 }
